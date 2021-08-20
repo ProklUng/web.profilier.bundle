@@ -59,8 +59,8 @@ final class CustomWebProfilerBundleExtension extends Extension
 
             // Без роутера.
             $root = $container->getParameter('kernel.project_dir');
-            if (!@file_exists($root . '/bitrix/admin/_profiler.php')) {
-                copy(__DIR__ . '/../../Install/_profiler.php', $root . '/bitrix/admin/_profiler.php');
+            if (!@file_exists($root . '/bitrix/admin/_profilier.php')) {
+                copy(__DIR__.'/../../Install/_profilier.php', $root . '/bitrix/admin/_profilier.php');
             }
         }
 
