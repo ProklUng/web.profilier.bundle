@@ -1,0 +1,54 @@
+services:
+  # конфигурация по умолчанию в *этом* файле
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  Prokl\WebProfilierBundle\Transformers\RequestDataDataCollectorTransformer:
+    tags:
+      - { name: web_profiler.transformer, key: 'request' }
+
+  Prokl\WebProfilierBundle\Transformers\CacheDataCollectorTransformer:
+    tags:
+      - { name: web_profiler.transformer, key: 'cache' }
+
+  Prokl\WebProfilierBundle\Transformers\ConfigDataCollectorTransformer:
+    tags:
+      - { name: web_profiler.transformer, key: 'config' }
+
+  Prokl\WebProfilierBundle\Transformers\EventDataCollectorTransformer:
+    tags:
+      - { name: web_profiler.transformer, key: 'events' }
+
+  Prokl\WebProfilierBundle\Transformers\GuzzleDataCollectorTransformer:
+    tags:
+      - { name: web_profiler.transformer, key: 'guzzle' }
+
+  Prokl\WebProfilierBundle\Transformers\LogDataCollectorTransformer:
+    tags:
+      - { name: web_profiler.transformer, key: 'logger' }
+
+  Prokl\WebProfilierBundle\Transformers\NotifierDataCollectorTransformer:
+    tags:
+      - { name: web_profiler.transformer, key: 'notifier' }
+
+  Prokl\WebProfilierBundle\Transformers\TwigDataCollectorTransformer:
+    tags:
+      - { name: web_profiler.transformer, key: 'twig' }
+
+  Prokl\WebProfilierBundle\Transformers\RedisDataCollectorTransformer:
+    tags:
+      - { name: web_profiler.transformer, key: 'redis' }
+
+  Prokl\WebProfilierBundle\Transformers\MessengerDataCollectorTransformer:
+    tags:
+      - { name: web_profiler.transformer, key: 'messenger' }
+
+  Prokl\WebProfilierBundle\Transformers\WebHookDataCollectorTransformer:
+    tags:
+      - { name: web_profiler.transformer, key: 'easy_webhook.data_collector' }
+
+  Prokl\WebProfilierBundle\Transformers\JsonResponseDataCollectorTransformer:
+    tags:
+      - { name: web_profiler.transformer, key: 'json_response' }

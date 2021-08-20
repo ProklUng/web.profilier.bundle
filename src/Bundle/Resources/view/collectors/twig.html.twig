@@ -1,0 +1,109 @@
+{% import _self as helper %}
+
+{% if templatecount == 0 %}
+    <div>
+        <div>
+            <h2>Twig</h2>
+        </div>
+        <div class="empty">
+            <p>No Twig templates were rendered for this request.</p>
+        </div>
+    </div>
+{% else %}
+    <h2>Twig Metrics</h2>
+{% endif %}
+
+    {% set time = templatecount ? '%0.0f'|format(time) : 'n/a' %}
+    <span class="sf-toolbar-value">{{ time }}</span>
+    <span class="sf-toolbar-label">ms</span>
+
+    <div class="sf-toolbar-info-piece">
+        <b>Render Time</b>
+        <span>{{ time }} ms</span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+        <b>Template Calls</b>
+        <span class="sf-toolbar-status">{{ templatecount }}</span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+        <b>Block Calls</b>
+        <span class="sf-toolbar-status">{{ blockcount }}</span>
+    </div>
+    <div class="sf-toolbar-info-piece">
+        <b>Macro Calls</b>
+        <span class="sf-toolbar-status">{{ macrocount }}</span>
+    </div>
+
+    <div class="metrics">
+        <div class="metric">
+            <span class="value">{{ '%0.0f'|format(time) }} <span class="unit">ms</span></span>
+            <span class="label">Render time</span>
+        </div>
+
+        <div class="metric">
+            <span class="value">{{ templatecount }}</span>
+            <span class="label">Template calls</span>
+        </div>
+
+        <div class="metric">
+            <span class="value">{{ blockcount }}</span>
+            <span class="label">Block calls</span>
+        </div>
+
+        <div class="metric">
+            <span class="value">{{ macrocount }}</span>
+            <span class="label">Macro calls</span>
+        </div>
+
+    </div>
+
+    <div class="sf-toolbar-info-piece">
+        <p class="help">
+            Render time includes sub-requests rendering time (if any).
+        </p>
+    </div>
+
+    <div class="sf-toolbar-info-group">
+        <div class="sf-toolbar-info-piece">
+            <h4>Rendered Templates</h4>
+        </div>
+
+        <table id="twig-table">
+            <thead>
+            <tr>
+                <th scope="col">Template Name &amp; Path</th>
+                <th class="num-col" scope="col">Render Count</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for template, count in templates %}
+                <tr>
+                    {%- set file = templatePaths[template]|default(false) -%}
+                    {%- set link = file ? file|file_link(1) : false -%}
+                    <td>
+                        {% if link %}
+                            <a href="{{ link }}" title="{{ file }}">{{ template }}</a>
+                            <div>
+                                <a class="text-muted" href="{{ link }}" title="{{ file }}">
+                                    {{ file|file_relative|default(file) }}
+                                </a>
+                            </div>
+                        {% else %}
+                            {{ template }}
+                        {% endif %}
+                    </td>
+                    <td class="font-normal num-col">{{ count }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="sf-toolbar-info-piece">
+            <h4>Rendering Call Graph</h4>
+        </div>
+
+        <div id="twig-dump">
+            {{ htmlcallgraph }}
+        </div>
+
+    </div>

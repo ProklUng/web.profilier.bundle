@@ -1,0 +1,131 @@
+{% import './profiler/macros.html.twig' as macros %}
+
+<h2>Json response</h2>
+
+<div class="sf-toolbar-block">
+    <div class="sf-toolbar-info-piece">
+        <b>Method</b>
+        <span>{{ collector.method }}</span>
+    </div>
+
+    <div class="sf-toolbar-info-piece">
+        <b>Accepted content type</b>
+        <span>{{ collector.acceptableContentTypes|join(', ') }}</span>
+    </div>
+
+
+</div>
+
+<div class="sf-tabs">
+    <div class="tab">
+        <h3 class="tab-title">Response</h3>
+
+        <div class="tab-content">
+            <h3>Response content</h3>
+            {{ macros.render_bag(collector.responsecontent, 1, ['Json key', 'Value']) }}
+        </div>
+
+        <div class="tab-content">
+            <h3>Response Headers</h3>
+            {{ macros.render_bag(collector.responseheaders, 1, ['Header', 'Value']) }}
+        </div>
+    </div>
+
+    <div class="tab">
+        <h3 class="tab-title">Request</h3>
+
+        <div class="tab-content">
+            <h3>GET Parameters</h3>
+
+            {% if collector.requestquery.all is empty %}
+                <div class="empty">
+                    <p>No GET parameters</p>
+                </div>
+            {% else %}
+                {{ macros.render_bag(collector.requestquery) }}
+            {% endif %}
+
+            <h3>POST Parameters</h3>
+
+            {% if collector.requestrequest.all is empty %}
+                <div class="empty">
+                    <p>No POST parameters</p>
+                </div>
+            {% else %}
+                {{ macros.render_bag(collector.requestrequest) }}
+            {% endif %}
+
+            <h4>Uploaded Files</h4>
+
+            {% if collector.requestfiles is empty %}
+                <div class="empty">
+                    <p>No files were uploaded</p>
+                </div>
+            {% else %}
+                {{ macros.render_bag(collector.requestfiles) }}
+            {% endif %}
+
+            <h3>Request Content</h3>
+
+            {% if content == false %}
+                <div class="empty">
+                    <p>Request content not available (it was retrieved as a resource).</p>
+                </div>
+            {% elseif content %}
+                <div class="sf-tabs">
+                    {% set prettyJson = collector.isJsonRequest ? collector.prettyJson : null %}
+                    {% if prettyJson is not null %}
+                        <div class="tab">
+                            <h3 class="tab-title">Pretty</h3>
+                            <div class="tab-content">
+                                <div class="card" style="max-height: 500px; overflow-y: auto;">
+                                    <pre class="break-long-words">{{ prettyJson }}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="tab">
+                        <h3 class="tab-title">Raw</h3>
+                        <div class="tab-content">
+                            <div class="card">
+                                <pre class="break-long-words">{{ collector.content }}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="empty">
+                    <p>No content</p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div class="tab {{ collector.requestcookies.all is empty and collector.responsecookies.all is empty ? 'disabled' }}">
+        <h3 class="tab-title">Cookies</h3>
+
+        <div class="tab-content">
+            <h3>Request Cookies</h3>
+
+            {% if collector.requestcookies.all is empty %}
+                <div class="empty">
+                    <p>No request cookies</p>
+                </div>
+            {% else %}
+                {{ macros.render_bag(collector.requestcookies, 1) }}
+            {% endif %}
+
+            <h3>Response Cookies</h3>
+
+            {% if collector.responsecookies.all is empty %}
+                <div class="empty">
+                    <p>No response cookies</p>
+                </div>
+            {% else %}
+                {{ macros.render_bag(collector.responsecookies, 1) }}
+            {% endif %}
+        </div>
+    </div>
+</div>

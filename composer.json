@@ -1,0 +1,40 @@
+{
+    "name": "proklung/web-profilier-bundle",
+    "description": "Custom profilier for Bitrix+Symfony or Wordpress+Symfony.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gavrilov Fedy",
+            "email": "fedor.gavrilov.75@mail.ru",
+            "homepage": "https://github.com/ProklUng"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/ProklUng/web.profilier.bundle/issues",
+        "source": "https://github.com/ProklUng/web.profilier.bundle.bundle"
+    },
+    "autoload": {
+        "psr-4": {
+            "Prokl\\WebProfilierBundle\\": "src"
+        },
+        "exclude-from-classmap": [
+            "Tests/"
+        ]
+    },
+    "require": {
+        "php": ">=7.1 || ^8.0",
+        "symfony/dependency-injection": "^4.4 || ^5.0",
+        "symfony/http-kernel": "^4.4 || ^5.0",
+        "symfony/framework-bundle": "^4.4 || ^5.0",
+        "symfony/routing": "^4.4 || ^5.0",
+        "symfony/config": "^4.4 || ^5.0",
+        "symfony/twig-bridge": "^4.4 || ^5.0",
+        "twig/twig": "^1.43 |^2 | ^3"
+
+    },
+    "require-dev": {
+        "proklung/phpunit-testing-tools": "^1.5",
+        "icanhazstring/composer-unused": "^0.7.5"
+    }
+}

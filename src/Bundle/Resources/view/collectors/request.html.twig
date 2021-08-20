@@ -1,0 +1,294 @@
+{% import './profiler/macros.html.twig' as macros %}
+
+{% set request_status_code_color = (statuscode >= 400) ? 'red' : (statuscode >= 300) ? 'yellow' : 'green' %}
+{% import _self as helper %}
+
+    {% set request_handler %}
+        {{ helper.set_handler(collector.controller) }}
+    {% endset %}
+
+    {% if collector.redirect %}
+        {% set redirect_handler %}
+            {{ helper.set_handler(collector.redirect.controller, collector.redirect.route, 'GET' != collector.redirect.method ? collector.redirect.method) }}
+        {% endset %}
+    {% endif %}
+
+    {% if collector.forwardtoken %}
+        {% set forward_profile = profile.childByToken(collector.forwardtoken) %}
+        {% set forward_handler %}
+            {{ helper.set_handler(forward_profile ? forward_profile.collector('request').controller : 'n/a') }}
+        {% endset %}
+    {% endif %}
+
+<div class="sf-toolbar-info-group">
+    <div class="sf-toolbar-info-piece">
+        <b>HTTP status (in Symfony context)</b>
+        <span>{{ collector.statuscode }} {{ collector.statustext }}</span>
+    </div>
+
+    {% if 'GET' != collector.method -%}
+        <div class="sf-toolbar-info-piece">
+            <b>Method</b>
+            <span>{{ collector.method }}</span>
+        </div>
+
+    {%- endif %}
+
+    <div class="sf-toolbar-info-piece">
+        <b>Controller</b>
+        <span>{{ profiler_dump(controller_data) }}</span>
+    </div>
+
+    <div class="sf-toolbar-info-piece">
+        <b>Route name</b>
+        <span>{{ collector.route|default('n/a') }}</span>
+    </div>
+
+    <div class="sf-toolbar-info-piece">
+        <b>Has session</b>
+        <span>{% if collector.sessionmetadata|length %}yes{% else %}no{% endif %}</span>
+    </div>
+
+    <div class="sf-toolbar-info-piece">
+        <b>Stateless Check</b>
+        <span>{% if collector.statelesscheck %}yes{% else %}no{% endif %}</span>
+    </div>
+
+    <div class="sf-toolbar-info-piece">
+        <b>PHP_SELF</b>
+        <span>{{ phpself }}</span>
+    </div>
+
+    {% if redirect_handler is defined -%}
+        <div class="sf-toolbar-info-group">
+            <div class="sf-toolbar-info-piece">
+                <b>
+                    <span class="sf-toolbar-redirection-status sf-toolbar-status-yellow">{{ collector.redirect.status_code }}</span>
+                    Redirect from
+                </b>
+                <span>
+                        {{ redirect_handler }}
+{#                        (<a href="{{ path('_profiler', { token: collector.redirect.token }) }}">{{ collector.redirect.token }}</a>)#}
+                    </span>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div class="sf-tabs">
+    <div class="tab">
+        <h3 class="tab-title">Request</h3>
+
+        <div class="tab-content">
+            <h3>GET Parameters</h3>
+
+            {% if collector.requestquery.all is empty %}
+                <div class="empty">
+                    <p>No GET parameters</p>
+                </div>
+            {% else %}
+                {{ macros.render_bag(collector.requestquery) }}
+            {% endif %}
+
+            <h3>POST Parameters</h3>
+
+            {% if collector.requestrequest.all is empty %}
+                <div class="empty">
+                    <p>No POST parameters</p>
+                </div>
+            {% else %}
+                {{ macros.render_bag(collector.requestrequest) }}
+            {% endif %}
+
+            <h4>Uploaded Files</h4>
+
+            {% if collector.requestfiles is empty %}
+                <div class="empty">
+                    <p>No files were uploaded</p>
+                </div>
+            {% else %}
+                {{ macros.render_bag(collector.requestfiles) }}
+            {% endif %}
+
+            <h3>Request Attributes</h3>
+
+            {% if collector.requestattributes.all is empty %}
+                <div class="empty">
+                    <p>No attributes</p>
+                </div>
+            {% else %}
+                {{ macros.render_bag(collector.requestattributes, 1) }}
+            {% endif %}
+
+            <h3>Request Headers</h3>
+
+            {{ macros.render_bag(collector.requestheaders, 1, ['Header', 'Value']) }}
+
+            <h3>Request Content</h3>
+
+            {% if content == false %}
+                <div class="empty">
+                    <p>Request content not available (it was retrieved as a resource).</p>
+                </div>
+            {% elseif content %}
+                <div class="sf-tabs">
+                    {% set prettyJson = collector.isJsonRequest ? collector.prettyJson : null %}
+                    {% if prettyJson is not null %}
+                        <div class="tab">
+                            <h3 class="tab-title">Pretty</h3>
+                            <div class="tab-content">
+                                <div class="card" style="max-height: 500px; overflow-y: auto;">
+                                    <pre class="break-long-words">{{ prettyJson }}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="tab">
+                        <h3 class="tab-title">Raw</h3>
+                        <div class="tab-content">
+                            <div class="card">
+                                <pre class="break-long-words">{{ collector.content }}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="empty">
+                    <p>No content</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="tab">
+        <h3 class="tab-title">Response</h3>
+
+        <div class="tab-content">
+            <h3>Response Headers</h3>
+            {{ macros.render_bag(collector.responseheaders, 1, ['Header', 'Value']) }}
+        </div>
+    </div>
+
+    <div class="tab {{ collector.requestcookies.all is empty and collector.responsecookies.all is empty ? 'disabled' }}">
+        <h3 class="tab-title">Cookies</h3>
+
+        <div class="tab-content">
+            <h3>Request Cookies</h3>
+
+            {% if collector.requestcookies.all is empty %}
+                <div class="empty">
+                    <p>No request cookies</p>
+                </div>
+            {% else %}
+                {{ macros.render_bag(collector.requestcookies, 1) }}
+            {% endif %}
+
+            <h3>Response Cookies</h3>
+
+            {% if collector.responsecookies.all is empty %}
+                <div class="empty">
+                    <p>No response cookies</p>
+                </div>
+            {% else %}
+                {{ macros.render_bag(collector.responsecookies, 1) }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="tab {{ collector.sessionmetadata is empty ? 'disabled' }}">
+        <h3 class="tab-title">Session{% if collector.sessionusages is not empty %} <span class="badge">{{ collector.sessionusages|length }}</span>{% endif %}</h3>
+
+        <div class="tab-content">
+            <h3>Session Metadata</h3>
+
+            {% if collector.sessionmetadata is empty %}
+                <div class="empty">
+                    <p>No session metadata</p>
+                    <p>Raw session:</p>
+                    {{ profiler_dump(raw_session) }}
+                </div>
+            {% else %}
+                {{ macros.render_table(collector.sessionmetadata, 1) }}
+            {% endif %}
+
+            <h3>Session Attributes</h3>
+
+            {% if collector.sessionattributes is empty %}
+                <div class="empty">
+                    <p>No session attributes</p>
+                </div>
+            {% else %}
+                {{ macros.render_table(collector.sessionattributes, 1) }}
+
+                <p>Raw session:</p>
+                {{ profiler_dump(raw_session) }}
+            {% endif %}
+
+            <h3>Session Usage</h3>
+
+            <div class="metrics">
+                <div class="metric">
+                    <span class="value">{{ collector.sessionusages|length }}</span>
+                    <span class="label">Usages</span>
+                </div>
+
+                <div class="metric">
+                    <span class="label">Stateless check enabled</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab {{ collector.flashes is empty ? 'disabled' }}">
+        <h3 class="tab-title">Flashes</h3>
+
+        <div class="tab-content">
+            <h3>Flashes</h3>
+
+            {% if collector.flashes is empty %}
+                <div class="empty">
+                    <p>No flash messages were created.</p>
+                </div>
+            {% else %}
+                {{ macros.render_table(collector.flashes, 1) }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="tab">
+        <h3 class="tab-title">Server Parameters</h3>
+        <div class="tab-content">
+            <h3>Server Parameters</h3>
+            <h4>Defined in .env</h4>
+            {{ macros.render_bag(collector.dotenvvars) }}
+
+            <h4>Defined as regular env variables</h4>
+            {% set requestserver = [] %}
+            {% for key, value in collector.requestserver|filter((_, key) => key not in collector.dotenvvars.keys) %}
+                {% set requestserver = collector.requestserver|merge({(key): value}) %}
+            {% endfor %}
+            {{ macros.render_table(requestserver, 1) }}
+        </div>
+    </div>
+
+</div>
+
+{% macro set_handler(controller, route, method) %}
+    {% if controller.class is defined -%}
+        {%- if method|default(false) %}<span class="sf-toolbar-status sf-toolbar-redirection-method">{{ method }}</span>{% endif -%}
+        {%- set link = controller.file %}
+        {%- if link %}<a href="{{ link }}" title="{{ controller.class }}">{% else %}<span title="{{ controller.class }}">{% endif %}
+
+        {%- if route|default(false) -%}
+            @{{ route }}
+        {%- else -%}
+            {{- controller.class|abbr_class|striptags -}}
+            {{- controller.method ? ' :: ' ~ controller.method -}}
+        {%- endif -%}
+
+        {%- if link %}</a>{% else %}</span>{% endif %}
+    {%- else -%}
+        <span>None controller</span>
+    {%- endif %}
+{% endmacro %}

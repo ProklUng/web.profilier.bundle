@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profiler</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="/profiler/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <script src="/profiler/bootstrap/bootstrap.bundle.min.js"></script>
+
+    {% include './profiler/css.html.twig' %}
+</head>
+<body>
+<div id="wrap">
+    <div id="content" class="container">
+        <h1>Profiler</h1>
+
+        <div class="row">
+            <div class="col">
+                <button onclick="clearData()" class="btn btn-secondary" type="button">Очистить данные</button>
+            </div>
+        </div>
+
+        {% if empty %}
+            <div class="my-3">
+                Profiling data bag empty!
+            </div>
+        {% endif %}
+
+        <div class="accordion my-5" id="accordionMain">
+            {% set countUrl = 1 %}
+            {% for url,datas in data %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-heading{{ countUrl }}{{ loop.index }}">
+                        <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapse{{ countUrl }}{{ loop.index }}"
+                                aria-expanded="false"
+                                aria-controls="flush-collapse{{ countUrl }}{{ loop.index }}"
+                        >
+                            {{ url }}
+                        </button>
+                    </h2>
+                    <div id="flush-collapse{{ countUrl }}{{ loop.index }}"
+                         class="accordion-collapse collapse"
+                         aria-labelledby="flush-heading{{ countUrl }}{{ loop.index }}"
+                         data-bs-parent="#accordionMain"
+                    >
+                        <div class="accordion-body">
+                            {% set countCollectors = 1 %}
+                            <div class="accordion" id="accordionDate{{ countUrl }}{{ countCollectors }}{{ loop.index }}">
+                                {% for collector_name,collector in datas %}
+
+                                    {% set replace_value_var= '.' %}
+                                    {% set replace_with_value_var = '_' %}
+                                    {% set collector_name_ready = collector_name|replace({ (replace_value_var): replace_with_value_var }) %}
+
+                                    <div class="accordion-item">
+                                        <h4 class="accordion-header" id="h{{ countUrl }}{{ collector_name_ready }}{{ countCollectors }}headingCollector{{ loop.index }}">
+                                            <button class="accordion-button"
+                                                    type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#h{{ countUrl }}{{ collector_name_ready }}{{ countCollectors }}collapsecollector{{ loop.index }}"
+                                                    aria-expanded="false"
+                                                    aria-controls="h{{ countUrl }}{{ collector_name_ready }}{{ countCollectors }}collapsecollector{{ loop.index }}">
+                                                {{ collector_name }}
+                                            </button>
+                                        </h4>
+                                        <div id="h{{ countUrl }}{{ collector_name_ready }}{{ countCollectors }}collapsecollector{{ loop.index }}"
+                                             class="accordion-collapse collapse"
+                                             aria-labelledby="h{{ countUrl }}{{ collector_name_ready }}{{ countCollectors }}headingCollector{{ loop.index }}"
+                                             data-bs-parent="#h{{ countUrl }}accordionDate{{ countCollectors }}{{ loop.index }}"
+                                        >
+
+                                            <div class="accordion-body">
+                                                {% if collector.template %}
+                                                    {{ collector.template | raw }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% set countCollectors = countCollectors + 1 %}
+                        </div>
+                    </div>
+                </div>
+                {% set countUrl = countUrl + 1 %}
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+
+{% include './profiler/scripts.html.twig' %}
+
+</body>
+</html>

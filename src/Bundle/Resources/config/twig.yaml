@@ -1,0 +1,34 @@
+parameters:
+  # Где лежит кэш.
+  json_profiler: '%kernel.cache_dir%/profiler.json'
+  # Шаблон страницы админа.
+  admin_profiler_page_template: './profiler/layout.html.twig'
+
+services:
+  # конфигурация по умолчанию в *этом* файле
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  profilier.twig_loader:
+    class: Twig\Loader\FilesystemLoader
+    arguments:
+      - '%web_profilier.profiler_twig_templates_path%'
+
+  # Экземпляр Twig.
+  profilier.twig:
+    class: Twig\Environment
+    arguments:
+      - '@profilier.twig_loader'
+      - [debug: '%kernel.debug%' ]
+
+  Local\Services\DataCollecting\Twig\TwigProfilerExtension:
+    class: Local\Services\DataCollecting\Twig\TwigProfilerExtension
+    arguments: ['@Symfony\Component\VarDumper\Dumper\HtmlDumper']
+    tags:
+      - { name: twig.extension }
+
+  transformers.bag:
+    class: Local\Services\DataCollecting\Extractor\DataCollectorTransformerBag
+    arguments: [!tagged_locator { tag: 'web_profiler.transformer', index_by: 'key' }]

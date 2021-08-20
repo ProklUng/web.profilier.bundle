@@ -1,0 +1,41 @@
+parameters:
+  # Где лежит кэш.
+  json_profiler: '%kernel.cache_dir%/profiler.json'
+  # Шаблон страницы админа.
+  admin_profiler_page_template: './profiler/layout.html.twig'
+
+services:
+  # конфигурация по умолчанию в *этом* файле
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  Symfony\Component\VarDumper\Dumper\HtmlDumper: ~
+
+  #############
+  # Controllers
+  #############
+
+  Local\Services\DataCollecting\Controller\ProfilerAdminController:
+    class: Local\Services\DataCollecting\Controller\ProfilerAdminController
+    arguments:
+      - '@profilier.twig'
+      - '@Local\Services\DataCollecting\Contract\DataFileHandlerInterface'
+      - '%admin_profiler_page_template%'
+      - '%json_profiler%'
+
+  ########
+  # Utils
+  ########
+
+  ordinary_data_file_storage_uniqualizator:
+    class: Local\Services\DataCollecting\Utils\OrdinaryUniqualizatorProfileData
+
+  profilier_data_file_handler:
+    class: Local\Services\DataCollecting\Utils\DataFileHandler
+    arguments:
+      - '@Local\Services\DataCollecting\Contract\UniqualizatorProfileDataInterface'
+      - '%json_profiler%'
+
+  Local\Services\DataCollecting\Contract\DataFileHandlerInterface: '@profilier_data_file_handler'
