@@ -74,3 +74,5 @@ custom-web-profiler:
   где в качестве параметров передается `response` и `request`.
 
 В моем изыскательном [бандле](https://github.com/ProklUng/BitrixSymfonyRouterBundle) все это поддерживается.
+
+Предполагается, что папка `vendor` находится двумя уровнями выше `DOCUMENT_ROOT`.
