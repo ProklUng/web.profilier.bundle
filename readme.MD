@@ -9,8 +9,23 @@
 
 ## Установка
 
+Composer 2.0:
+
 ```bash
-composer require web-profilier-bundle
+composer require proklung/web-profilier-bundle
+```
+
+Composer 1.0:
+
+composer.json:
+
+```json
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/proklung/web-profilier-bundle"
+        }
+    ]
 ```
 
 ## Конфигурирование
