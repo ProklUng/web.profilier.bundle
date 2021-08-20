@@ -28,7 +28,7 @@ final class Configuration implements ConfigurationInterface
                      ->useAttributeAsKey('name')
                      ->prototype('scalar')->end()
                       // @phpstan-ignore-next-line
-                     ->defaultValue(['%kernel.project_dir%/local/classes/Services/DataCollecting/Bundle/Resources/view'])
+                     ->defaultValue(['%kernel.project_dir%/../../vendor/proklung/web-profilier-bundle/src/Bundle/Resources/view'])
                 ->end()
                 ->arrayNode('ignoring_url')
                     ->useAttributeAsKey('name')
