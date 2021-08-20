@@ -17,11 +17,11 @@ services:
   # Controllers
   #############
 
-  Local\Services\DataCollecting\Controller\ProfilerAdminController:
-    class: Local\Services\DataCollecting\Controller\ProfilerAdminController
+  Prokl\WebProfilierBundle\Controller\ProfilerAdminController:
+    class: Prokl\WebProfilierBundle\Controller\ProfilerAdminController
     arguments:
       - '@profilier.twig'
-      - '@Local\Services\DataCollecting\Contract\DataFileHandlerInterface'
+      - '@Prokl\WebProfilierBundle\Contract\DataFileHandlerInterface'
       - '%admin_profiler_page_template%'
       - '%json_profiler%'
 
@@ -30,12 +30,12 @@ services:
   ########
 
   ordinary_data_file_storage_uniqualizator:
-    class: Local\Services\DataCollecting\Utils\OrdinaryUniqualizatorProfileData
+    class: Prokl\WebProfilierBundle\Utils\OrdinaryUniqualizatorProfileData
 
   profilier_data_file_handler:
-    class: Local\Services\DataCollecting\Utils\DataFileHandler
+    class: Prokl\WebProfilierBundle\Utils\DataFileHandler
     arguments:
-      - '@Local\Services\DataCollecting\Contract\UniqualizatorProfileDataInterface'
+      - '@Prokl\WebProfilierBundle\Contract\UniqualizatorProfileDataInterface'
       - '%json_profiler%'
 
-  Local\Services\DataCollecting\Contract\DataFileHandlerInterface: '@profilier_data_file_handler'
+  Prokl\WebProfilierBundle\Contract\DataFileHandlerInterface: '@profilier_data_file_handler'

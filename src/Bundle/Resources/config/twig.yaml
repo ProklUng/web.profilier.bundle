@@ -23,12 +23,12 @@ services:
       - '@profilier.twig_loader'
       - [debug: '%kernel.debug%' ]
 
-  Local\Services\DataCollecting\Twig\TwigProfilerExtension:
-    class: Local\Services\DataCollecting\Twig\TwigProfilerExtension
+  Prokl\WebProfilierBundle\Twig\TwigProfilerExtension:
+    class: Prokl\WebProfilierBundle\Twig\TwigProfilerExtension
     arguments: ['@Symfony\Component\VarDumper\Dumper\HtmlDumper']
     tags:
       - { name: twig.extension }
 
   transformers.bag:
-    class: Local\Services\DataCollecting\Extractor\DataCollectorTransformerBag
+    class: Prokl\WebProfilierBundle\Extractor\DataCollectorTransformerBag
     arguments: [!tagged_locator { tag: 'web_profiler.transformer', index_by: 'key' }]
