@@ -150,7 +150,11 @@
         xhr.onload = function() {
             if (xhr.status !== 200) {
                 alert(`Ошибка ${xhr.status}: ${xhr.statusText}`);
+                return;
             }
+
+            location.reload();
+            return false;
         };
     }
 
