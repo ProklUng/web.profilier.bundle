@@ -8,41 +8,30 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * WebDebugToolbarListener injects the Web Debug Toolbar.
- *
- * The onKernelResponse method must be connected to the kernel.response event.
- *
- * The WDT is only injected on well-formed HTML (with a proper </body> tag).
- * This means that the WDT is never included in sub-requests or ESI requests.
- *
- * @author Fabien Potencier <fabien@symfony.com>
- *
- * @final
+ * Class WebDebugToolbarListener
+ * Проставляет заголовки X-Debug-Token симфоническим роутам.
  */
 final class WebDebugToolbarListener implements EventSubscriberInterface
 {
     public const DISABLED = 1;
     public const ENABLED = 2;
 
-    protected $twig;
-    protected $urlGenerator;
-    protected $interceptRedirects;
-    protected $mode;
-    protected $excludedAjaxPaths;
-    private $cspHandler;
+    /**
+     * @var UrlGeneratorInterface|null $urlGenerator
+     */
+    private $urlGenerator;
+
+    /**
+     * @var integer $mode
+     */
+    private $mode;
 
     public function __construct(
-        bool $interceptRedirects = false,
         int $mode = self::ENABLED,
-        UrlGeneratorInterface $urlGenerator = null,
-        string $excludedAjaxPaths = '^/bundles|^/_wdt',
-        ContentSecurityPolicyHandler $cspHandler = null
+        UrlGeneratorInterface $urlGenerator = null
     ) {
         $this->urlGenerator = $urlGenerator;
-        $this->interceptRedirects = $interceptRedirects;
         $this->mode = $mode;
-        $this->excludedAjaxPaths = $excludedAjaxPaths;
-        $this->cspHandler = $cspHandler;
     }
 
     public function isEnabled(): bool
@@ -50,10 +39,14 @@ final class WebDebugToolbarListener implements EventSubscriberInterface
         return self::DISABLED !== $this->mode;
     }
 
+    /**
+     * @param ResponseEvent $event
+     *
+     * @return void
+     */
     public function onKernelResponse(ResponseEvent $event)
     {
         $response = $event->getResponse();
-        $request = $event->getRequest();
 
         if ($response->headers->has('X-Debug-Token') && null !== $this->urlGenerator) {
             try {
@@ -72,12 +65,6 @@ final class WebDebugToolbarListener implements EventSubscriberInterface
                 );
             }
         }
-
-        if (!$event->isMasterRequest()) {
-            return;
-        }
-
-        $this->cspHandler ? $this->cspHandler->updateResponseHeaders($request, $response) : [];
     }
 
     /**
