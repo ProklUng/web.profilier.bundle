@@ -19,7 +19,7 @@ services:
   # Кастомное событие, чтобы проставить заголовки
   Prokl\WebProfilierBundle\Events\BitrixAfterHandleRequestListener:
     class: Prokl\WebProfilierBundle\Events\BitrixAfterHandleRequestListener
-    arguments: ['@Prokl\WebProfilierBundle\Utils\ProfilerGuard', '%ignoring_url%']
+    arguments: ['@Prokl\WebProfilierBundle\Utils\ProfilerGuard', '%web_profilier.ignoring_url%']
     tags:
       - { name: kernel.event_listener, event: kernel.after_handle_request, method: handle, priority: 1 }
 
@@ -27,7 +27,7 @@ services:
   profilier_data_eraser:
     class: Prokl\WebProfilierBundle\EraserData
     arguments:
-      - '%json_profiler%'
+      - '%web_profilier.profiler_cache_path%'
 
   #############
   # Controllers

@@ -1,7 +1,7 @@
 # Битрикс профайлер. Бандл для кастомных вариантов Битрикс + Symfony
 
 Экспериментальное решение частной задачи - прикручивание, взятого за основу [WebProfilerBundle](https://github.com/symfony/web-profiler-bundle)
- к кастомным вариантам Битрикс + Symfony (или Wordpress + Symfony)
+к кастомным вариантам Битрикс + Symfony (или Wordpress + Symfony)
 
 ***INTERNAL***
 
@@ -21,11 +21,11 @@ composer.json:
 
 ```json
     "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/proklung/web-profilier-bundle"
-        }
-    ]
+{
+"type": "git",
+"url": "https://github.com/proklung/web-profilier-bundle"
+}
+]
 ```
 
 ## Конфигурирование
@@ -35,7 +35,7 @@ composer.json:
 ```yaml
 custom-web-profiler:
   enabled: true
-  json_profiler: '%kernel.cache_dir%/profiler.json'
+  profiler_cache_path: '%kernel.cache_dir%/profiler.json'
   # Дополнительный путь к твиговским шаблонам профайлера и коллекторов
   profiler_twig_templates_path:
     - '%kernel.project_dir%/twig/view'
@@ -57,9 +57,9 @@ custom-web-profiler:
 ### Использование
 
 При включении бандла в `standalone_bundles.php` появляется страница `/_profilier/`, где выводятся данные о происходящем
- в текущей сессии.
+в текущей сессии.
 
-Если [бандл](https://github.com/ProklUng/BitrixSymfonyRouterBundle) не установлен, то профайлер находится по адресу 
+Если [бандл](https://github.com/ProklUng/BitrixSymfonyRouterBundle) не установлен, то профайлер находится по адресу
 `/bitrix/admin/_profilier.php` (при инициализации будет единожды скопирован туда).
 
 ### Нюансы
@@ -67,12 +67,10 @@ custom-web-profiler:
 Чтобы отслеживать роуты Symfony роутер должен соблюсти два условия:
 
 1) После обработки роута, но до определения, что это роут нативный или симфонический, нужно запустить кастомное событие
- `kernel.after_handle_request`, передав ему в качестве параметра класс, отнаследованный от `Symfony\Contracts\EventDispatcher\Event`
-  и реализущий два метода - `getRequest` и `getResponse`.
+   `kernel.after_handle_request`, передав ему в качестве параметра класс, отнаследованный от `Symfony\Contracts\EventDispatcher\Event`
+   и реализущий два метода - `getRequest` и `getResponse`.
 
 2) Перед выходом из скрипта, после обработки симфонического роутера должно инициироваться битриксовое событие `OnAfterEpilog`,
-  где в качестве параметров передается `response` и `request`.
+   где в качестве параметров передается `response` и `request`.
 
 В моем изыскательном [бандле](https://github.com/ProklUng/BitrixSymfonyRouterBundle) все это поддерживается.
-
-Предполагается, что папка `vendor` находится двумя уровнями выше `DOCUMENT_ROOT`.

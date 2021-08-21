@@ -1,7 +1,6 @@
 <?php
 
-use Prokl\WebProfilierBundle\Controller\ProfilerAdminController;
-use Symfony\Component\HttpFoundation\Request;
+use Prokl\WebProfilierBundle\Controller\EraserDataController;
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/prolog_before.php';
 
@@ -13,9 +12,9 @@ if (!function_exists('container')) {
     );
 }
 
-/** @var  $controller ProfilerAdminController */
-$controller = container()->get(ProfilerAdminController::class);
-$content = $controller->action(new Request());
+/** @var  $controller EraserDataController */
+$controller = container()->get(EraserDataController::class);
+$content = $controller->action();
 $content->sendContent();
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/include/epilog.php';

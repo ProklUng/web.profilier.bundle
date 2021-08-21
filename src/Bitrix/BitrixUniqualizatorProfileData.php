@@ -17,6 +17,8 @@ class BitrixUniqualizatorProfileData implements UniqualizatorProfileDataInterfac
      */
     public function unique(string $basePath) : string
     {
-        return $basePath .'.' . bitrix_sessid();
+        $userId = $GLOBALS['USER'];
+
+        return $basePath .'/package.' . bitrix_sessid() . '.json';
     }
 }

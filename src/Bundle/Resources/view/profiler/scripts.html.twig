@@ -142,8 +142,16 @@
         }
     };
 
-    function clearData(event) {
+    function clearData() {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', '/bitrix/admin/_profilier_clear.php');
+        xhr.send();
 
+        xhr.onload = function() {
+            if (xhr.status !== 200) {
+                alert(`Ошибка ${xhr.status}: ${xhr.statusText}`);
+            }
+        };
     }
 
     createTabs();

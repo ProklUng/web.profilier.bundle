@@ -1,9 +1,3 @@
-parameters:
-  # Где лежит кэш.
-  json_profiler: '%kernel.cache_dir%/profiler.json'
-  # Шаблон страницы админа.
-  admin_profiler_page_template: './profiler/layout.html.twig'
-
 services:
   # конфигурация по умолчанию в *этом* файле
   _defaults:

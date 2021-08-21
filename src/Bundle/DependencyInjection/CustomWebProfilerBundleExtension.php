@@ -57,21 +57,18 @@ final class CustomWebProfilerBundleExtension extends Extension
                 // Нет роутера - не страшно.
             }
 
-            // Без роутера.
-            $root = $container->getParameter('kernel.project_dir');
-            if (!@file_exists($root . '/bitrix/admin/_profilier.php')) {
-                copy(__DIR__.'/../../Install/_profilier.php', $root . '/bitrix/admin/_profilier.php');
-            }
+            $this->installFiles($container->getParameter('kernel.project_dir'));
         }
 
-        $container->setParameter('json_profiler', $config['json_profiler']);
-        $container->setParameter('admin_profiler_page_template', $config['admin_profiler_page_template']);
+        $container->setParameter('web_profilier.profiler_cache_path', $config['profiler_cache_path']);
+
+        $container->setParameter('web_profilier.admin_profiler_page_template', $config['admin_profiler_page_template']);
 
         $config['profiler_twig_templates_path'][] = __DIR__ . '/../Resources/view'; // Дефолтные твиговские шаблоны
         $twigPaths = array_unique($config['profiler_twig_templates_path']);
 
         $container->setParameter('web_profilier.profiler_twig_templates_path', $twigPaths);
-        $container->setParameter('ignoring_url', $config['ignoring_url']);
+        $container->setParameter('web_profilier.ignoring_url', $config['ignoring_url']);
         $container->setParameter('web_profilier.disabled_profilers', $config['profilers']);
     }
 
@@ -107,5 +104,24 @@ final class CustomWebProfilerBundleExtension extends Extension
         }
 
         throw new InvalidArgumentException('Class InitRouter not exist.');
+    }
+
+    /**
+     * Копирование файлов.
+     *
+     * @param string $root DOCUMENT_ROOT.
+     *
+     * @return void
+     */
+    private function installFiles(string $root): void
+    {
+        // Без роутера.
+        if (!@file_exists($root.'/bitrix/admin/_profilier.php')) {
+            copy(__DIR__.'/../../Install/_profilier.php', $root.'/bitrix/admin/_profilier.php');
+        }
+
+        if (!@file_exists($root.'/bitrix/admin/_profilier_clear.php')) {
+            copy(__DIR__.'/../../Install/_profilier_clear.php', $root.'/bitrix/admin/_profilier_clear.php');
+        }
     }
 }
