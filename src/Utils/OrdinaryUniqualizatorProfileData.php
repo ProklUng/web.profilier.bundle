@@ -19,4 +19,12 @@ class OrdinaryUniqualizatorProfileData implements UniqualizatorProfileDataInterf
     {
         return $basePath;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function baseFilename(string $basePath) : string
+    {
+        return 'package';
+    }
 }

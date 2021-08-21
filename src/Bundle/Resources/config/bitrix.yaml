@@ -27,6 +27,7 @@ services:
   profilier_data_eraser:
     class: Prokl\WebProfilierBundle\EraserData
     arguments:
+      - '@Prokl\WebProfilierBundle\Contract\UniqualizatorProfileDataInterface'
       - '%web_profilier.profiler_cache_path%'
 
   #############

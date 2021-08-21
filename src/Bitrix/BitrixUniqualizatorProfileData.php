@@ -13,12 +13,27 @@ use Prokl\WebProfilierBundle\Contract\UniqualizatorProfileDataInterface;
 class BitrixUniqualizatorProfileData implements UniqualizatorProfileDataInterface
 {
     /**
+     * @var integer $userId ID битриксового пользователя.
+     */
+    private $userId;
+
+    /**
      * @inheritDoc
      */
     public function unique(string $basePath) : string
     {
-        $userId = (int)$GLOBALS['USER']->GetID();
+        $this->userId = (int)$GLOBALS['USER']->GetID();
 
-        return $basePath .'/package.' . $userId . '.' . bitrix_sessid() . '.json';
+        return $basePath . '/package.' . $this->userId . '.' . bitrix_sessid() . '.json';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function baseFilename(string $basePath) : string
+    {
+        $this->userId = (int)$GLOBALS['USER']->GetID();
+
+        return 'package.' . $this->userId;
     }
 }

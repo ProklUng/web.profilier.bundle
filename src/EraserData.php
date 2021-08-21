@@ -2,6 +2,8 @@
 
 namespace Prokl\WebProfilierBundle;
 
+use Prokl\WebProfilierBundle\Contract\UniqualizatorProfileDataInterface;
+
 /**
  * Class EraserData
  * @package Prokl\WebProfilierBundle
@@ -11,16 +13,25 @@ namespace Prokl\WebProfilierBundle;
 class EraserData
 {
     /**
+     * @var UniqualizatorProfileDataInterface $uniqualizatorProfileData Уникализатор.
+     */
+    private $uniqualizatorProfileData;
+
+    /**
      * @var string $jsonPath
      */
     private $jsonPath = '';
 
     /**
-     * @param string $jsonPath Путь к кэшу.
+     * @param string                            $jsonPath                 Путь к кэшу.
+     * @param UniqualizatorProfileDataInterface $uniqualizatorProfileData Уникализатор.
      */
-    public function __construct(string $jsonPath)
-    {
+    public function __construct(
+        UniqualizatorProfileDataInterface $uniqualizatorProfileData,
+        string $jsonPath
+    ) {
         $this->jsonPath = $jsonPath;
+        $this->uniqualizatorProfileData = $uniqualizatorProfileData;
     }
 
     /**
@@ -32,7 +43,21 @@ class EraserData
     {
         $this->rrmdir($_SERVER['DOCUMENT_ROOT'] . '/bitrix/cache/profiler');
         // ToDo - привести к реалиям.
-        @unlink($this->jsonPath);
+
+        $userId = $GLOBALS['USER']->GetId();
+        $files = scandir($this->jsonPath);
+
+        $baseFilename = $this->uniqualizatorProfileData->baseFilename($this->jsonPath);
+
+        foreach ($files as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+
+            if (stripos($file, $baseFilename) !== false) {
+                @unlink($this->jsonPath . '/' . $file);
+            }
+        }
     }
 
     /**
