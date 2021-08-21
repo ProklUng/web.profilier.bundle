@@ -32,6 +32,10 @@ class DataFileHandler implements DataFileHandlerInterface
     {
         $this->uniqualizatorProfileData = $uniqualizatorProfileData;
         $this->basePath = $basePath;
+
+        if (!@file_exists($basePath)) {
+            @mkdir($basePath);
+        }
     }
 
     /**
