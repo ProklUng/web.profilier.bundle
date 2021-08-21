@@ -31,33 +31,32 @@ class DataCollectingEventHandler
     private $dataFileHandler;
 
     /**
-     * @var DataCollectorTransformerBag DataCollectorTransformerBag
-     */
-    private $collectorTransformerBag;
-
-    /**
      * @var ProfilerGuardInterface $guard
      */
     private $guard;
 
     /**
+     * @var ProfileExtractor $profileExtractor
+     */
+    private $profileExtractor;
+
+    /**
      * DataCollectingEventHandler constructor.
      *
      * @param Profiler                    $profiler                Profiler.
-     * @param DataCollectorTransformerBag $collectorTransformerBag Трансформеры.
      * @param ProfilerGuardInterface      $guard                   Guard.
      * @param DataFileHandlerInterface    $dataFileHandler         Обработчик файлов профайлера.
      */
     public function __construct(
         Profiler $profiler,
-        DataCollectorTransformerBag $collectorTransformerBag,
         ProfilerGuardInterface $guard,
+        ProfileExtractor $profileExtractor,
         DataFileHandlerInterface $dataFileHandler
     ) {
         $this->profiler = $profiler;
         $this->guard = $guard;
-        $this->collectorTransformerBag = $collectorTransformerBag;
         $this->dataFileHandler = $dataFileHandler;
+        $this->profileExtractor = $profileExtractor;
     }
 
     /**
@@ -135,8 +134,7 @@ class DataCollectingEventHandler
                 $profile->addCollector($externalCollector);
             }
 
-            $extractor = new ProfileExtractor($this->collectorTransformerBag);
-            $json = $extractor->extract($profile);
+            $json = $this->profileExtractor->extract($profile);
 
             $result[$url] = $json;
             $this->dataFileHandler->write($result);

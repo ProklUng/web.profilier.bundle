@@ -10,8 +10,8 @@ services:
     class: Prokl\WebProfilierBundle\Events\DataCollectingEventHandler
     arguments:
       - '@profiler'
-      - '@transformers.bag'
       - '@Prokl\WebProfilierBundle\Utils\ProfilerGuard'
+      - '@profile_extractor'
       - '@Prokl\WebProfilierBundle\Contract\DataFileHandlerInterface'
     tags:
       - { name: bitrix.events.init, module: main, event: OnAfterEpilog, method: handle, sort: 1 }
@@ -48,6 +48,10 @@ services:
   ########
   # Utils
   ########
+
+  bitrix.user:
+    public: false
+    class: CUser
 
   Prokl\WebProfilierBundle\Utils\ProfilerGuard:
     class: Prokl\WebProfilierBundle\Utils\ProfilerGuard

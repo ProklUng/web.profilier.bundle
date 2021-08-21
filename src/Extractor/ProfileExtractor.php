@@ -5,6 +5,7 @@ namespace Prokl\WebProfilierBundle\Extractor;
 use Prokl\WebProfilierBundle\Contract\DataCollectorTransformerInterface;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 use Symfony\Component\HttpKernel\Profiler\Profile;
+use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 /**
  * Class ProfileExtractor
@@ -20,11 +21,37 @@ class ProfileExtractor
     private $transformers;
 
     /**
-     * @param DataCollectorTransformerBag $transformers Jsoners bag.
+     * @var Profiler $profiler Profiler.
      */
-    public function __construct(DataCollectorTransformerBag $transformers)
-    {
+    private $profiler;
+
+    /**
+     * @param DataCollectorTransformerBag $transformers Jsoners bag.
+     * @param Profiler                    $profiler     Profiler.
+     */
+    public function __construct(
+        Profiler $profiler,
+        DataCollectorTransformerBag $transformers
+    ) {
         $this->transformers = $transformers;
+        $this->profiler = $profiler;
+    }
+
+    /**
+     * @param string $token Токен.
+     *
+     * @return array
+     */
+    public function extractByToken(string $token) : array
+    {
+        $profile = $this->profiler->loadProfile($token);
+        if (!$profile) {
+            throw new \RuntimeException('Profile by token ' . $token . ' not found.');
+        }
+
+        $data[$profile->getUrl()] = $this->extract($profile);
+
+        return $data;
     }
 
     /**

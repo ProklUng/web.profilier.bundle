@@ -2,6 +2,7 @@
 
 namespace Prokl\WebProfilierBundle\Bundle;
 
+use Prokl\WebProfilierBundle\Bundle\DependencyInjection\CompilerPass\ProfilierListenerRemoverCompilerPass;
 use Prokl\WebProfilierBundle\Bundle\DependencyInjection\CompilerPass\TransformersRemovingCompilerPass;
 use Prokl\WebProfilierBundle\Bundle\DependencyInjection\CustomWebProfilerBundleExtension;
 use Prokl\WebProfilierBundle\Bundle\DependencyInjection\CompilerPass\AddPathTwigCompilerPass;
@@ -37,5 +38,6 @@ final class CustomWebProfilerBundle extends Bundle
 
         $container->addCompilerPass(new AddPathTwigCompilerPass());
         $container->addCompilerPass(new TransformersRemovingCompilerPass());
+        $container->addCompilerPass(new ProfilierListenerRemoverCompilerPass());
     }
 }
