@@ -16,6 +16,13 @@ services:
     tags:
       - { name: bitrix.events.init, module: main, event: OnAfterEpilog, method: handle, sort: 1 }
 
+  Prokl\WebProfilierBundle\Events\BitrixOnBeforePrologHandler:
+    class: Prokl\WebProfilierBundle\Events\BitrixOnBeforePrologHandler
+    arguments:
+      - '@profiler'
+    tags:
+      - { name: bitrix.events.init, module: main, event: OnBeforeProlog, method: handle, sort: 1 }
+
   # Кастомное событие, чтобы проставить заголовки
   Prokl\WebProfilierBundle\Events\BitrixAfterHandleRequestListener:
     class: Prokl\WebProfilierBundle\Events\BitrixAfterHandleRequestListener
