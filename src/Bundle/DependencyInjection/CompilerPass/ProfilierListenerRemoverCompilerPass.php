@@ -18,7 +18,7 @@ class ProfilierListenerRemoverCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->hasParameter('profiler_listener')) {
+        if (!$container->hasDefinition('profiler_listener')) {
             return;
         }
 
