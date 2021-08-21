@@ -37,6 +37,12 @@ services:
       - '@Prokl\WebProfilierBundle\Contract\UniqualizatorProfileDataInterface'
       - '%web_profilier.profiler_cache_path%'
 
+  Prokl\WebProfilierBundle\Events\ProfileListenerDecorator:
+    decorates: profiler_listener
+    arguments: ['@.inner']
+    tags:
+      - { name: kernel.event_subscriber }
+
   #############
   # Controllers
   #############
