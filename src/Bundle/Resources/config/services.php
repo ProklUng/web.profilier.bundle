@@ -9,8 +9,7 @@ return static function (ContainerConfigurator $container) {
          ->set('web_profiler.debug_toolbar', WebDebugToolbarListener::class)
             ->public()
             ->args([
-                true,
-                service('router')->ignoreOnInvalid(),
+                true
             ])
             ->tag('kernel.event_subscriber')
     ;

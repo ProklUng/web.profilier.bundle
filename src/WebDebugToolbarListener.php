@@ -5,7 +5,6 @@ namespace Prokl\WebProfilierBundle;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class WebDebugToolbarListener
@@ -17,20 +16,13 @@ final class WebDebugToolbarListener implements EventSubscriberInterface
     public const ENABLED = 2;
 
     /**
-     * @var UrlGeneratorInterface|null $urlGenerator
-     */
-    private $urlGenerator;
-
-    /**
      * @var integer $mode
      */
     private $mode;
 
     public function __construct(
-        int $mode = self::ENABLED,
-        UrlGeneratorInterface $urlGenerator = null
+        int $mode = self::ENABLED
     ) {
-        $this->urlGenerator = $urlGenerator;
         $this->mode = $mode;
     }
 
@@ -48,15 +40,11 @@ final class WebDebugToolbarListener implements EventSubscriberInterface
     {
         $response = $event->getResponse();
 
-        if ($response->headers->has('X-Debug-Token') && null !== $this->urlGenerator) {
+        if ($response->headers->has('X-Debug-Token')) {
             try {
                 $response->headers->set(
                     'X-Debug-Token-Link',
-                    $this->urlGenerator->generate(
-                        '_profiler',
-                        ['token' => $response->headers->get('X-Debug-Token')],
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    )
+                    '/bitrix/admin/_profilier/'
                 );
             } catch (\Exception $e) {
                 $response->headers->set(
