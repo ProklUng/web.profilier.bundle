@@ -72,6 +72,12 @@ class DataCollectingEventHandler
     public function handle(Response $sfResponse = null, Request $sfRequest = null): void
     {
         if (!$this->guard->isGranted()) {
+            $this->profiler->disable();
+            return;
+        }
+
+        if (!$GLOBALS['USER']->IsAdmin()) {
+            $this->profiler->disable();
             return;
         }
 

@@ -29,10 +29,8 @@ class ProfilerGuard implements ProfilerGuardInterface
      */
     public function isGranted() : bool
     {
-        if ($this->env !== 'dev'
-            ||
-            $_SERVER['PHP_SELF'] === '/bitrix/tools/public_session.php' // Внутренняя хрень.
-        ) {
+        if ($_SERVER['PHP_SELF'] === '/bitrix/tools/public_session.php')
+        {
             return false;
         }
 
