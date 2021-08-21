@@ -22,6 +22,11 @@
             "Tests/"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Prokl\\WebProfilierBundle\\Tests\\": "tests"
+        }
+    },
     "require": {
         "php": ">=7.1 || ^8.0",
         "symfony/dependency-injection": "^4.4 || ^5.0",

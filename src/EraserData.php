@@ -18,46 +18,51 @@ class EraserData
     private $uniqualizatorProfileData;
 
     /**
-     * @var string $jsonPath
+     * @var string $profilerDataDirectory Путь к кэшу.
      */
-    private $jsonPath = '';
+    private $profilerDataDirectory;
 
     /**
-     * @param string                            $jsonPath                 Путь к кэшу.
+     * @param string                            $profilerDataDirectory    Путь к кэшу.
      * @param UniqualizatorProfileDataInterface $uniqualizatorProfileData Уникализатор.
      */
     public function __construct(
         UniqualizatorProfileDataInterface $uniqualizatorProfileData,
-        string $jsonPath
+        string $profilerDataDirectory
     ) {
-        $this->jsonPath = $jsonPath;
+        $this->profilerDataDirectory = $profilerDataDirectory;
         $this->uniqualizatorProfileData = $uniqualizatorProfileData;
     }
 
     /**
      * Движуха.
      *
-     * @return void
+     * @return integer Количество удаленных файлов.
      */
-    public function clear() : void
+    public function clear() : int
     {
-        $this->rrmdir($_SERVER['DOCUMENT_ROOT'] . '/bitrix/cache/profiler');
-        // ToDo - привести к реалиям.
+        $this->rrmdir('/bitrix/cache/profiler');
 
-        $userId = $GLOBALS['USER']->GetId();
-        $files = scandir($this->jsonPath);
+        $baseFilename = $this->uniqualizatorProfileData->baseFilename($this->profilerDataDirectory);
+        if (!$this->profilerDataDirectory) {
+            return 0;
+        }
 
-        $baseFilename = $this->uniqualizatorProfileData->baseFilename($this->jsonPath);
+        $files = scandir($this->profilerDataDirectory);
 
+        $count = 0;
         foreach ($files as $file) {
             if ($file === '.' || $file === '..') {
                 continue;
             }
 
             if (stripos($file, $baseFilename) !== false) {
-                @unlink($this->jsonPath . '/' . $file);
+                @unlink($this->profilerDataDirectory . '/' . $file);
+                $count++;
             }
         }
+
+        return $count;
     }
 
     /**
@@ -69,6 +74,12 @@ class EraserData
      */
     private function rrmdir(string $dir) : void
     {
+        if (!@file_exists($_SERVER['DOCUMENT_ROOT'] . $dir)) {
+            return;
+        }
+
+        $dir = $_SERVER['DOCUMENT_ROOT'] . $dir;
+
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
