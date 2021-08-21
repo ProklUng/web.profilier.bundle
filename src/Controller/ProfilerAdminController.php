@@ -36,6 +36,11 @@ class ProfilerAdminController extends AbstractController
     private $template;
 
     /**
+     * @var \CUser $user Битриксовый $USER.
+     */
+    private $user;
+
+    /**
      * @param Environment              $twig            Twig.
      * @param DataFileHandlerInterface $dataFileHandler Обработчик файлов профайлера.
      * @param string                   $template        Шаблон страницы.
@@ -43,11 +48,13 @@ class ProfilerAdminController extends AbstractController
     public function __construct(
         Environment $twig,
         DataFileHandlerInterface $dataFileHandler,
+        \CUser $user,
         string $template
     ) {
         $this->twig = $twig;
         $this->template = $template;
         $this->dataFileHandler = $dataFileHandler;
+        $this->user = $user;
     }
 
     /**
@@ -59,7 +66,7 @@ class ProfilerAdminController extends AbstractController
      */
     public function action(Request $request) : Response
     {
-        if (!$GLOBALS['USER']->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw $this->createAccessDeniedException('Only admins allowed!');
         }
 

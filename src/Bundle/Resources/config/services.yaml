@@ -16,12 +16,17 @@ services:
     arguments:
       - '@profilier.twig'
       - '@Prokl\WebProfilierBundle\Contract\DataFileHandlerInterface'
+      - '@bitrix.user'
       - '%web_profilier.admin_profiler_page_template%'
       - '%web_profilier.profiler_cache_path%'
 
   ########
   # Utils
   ########
+
+  bitrix.user:
+    public: false
+    class: CUser
 
   ordinary_data_file_storage_uniqualizator:
     class: Prokl\WebProfilierBundle\Utils\OrdinaryUniqualizatorProfileData
