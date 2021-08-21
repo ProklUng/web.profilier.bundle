@@ -21,12 +21,7 @@ class TwigDataCollectorTransformer implements DataCollectorTransformerInterface
     public function transform($dataCollector) : array
     {
         return [
-            'templates' => $dataCollector->getTemplates(),
-            'templatecount' => $dataCollector->getTemplateCount(),
-            'blockcount' => $dataCollector->getBlockCount(),
-            'macrocount' => $dataCollector->getMacroCount(),
-            'time' => $dataCollector->getTime(),
-            'htmlcallgraph' => $dataCollector->getHtmlCallGraph(),
+            'collector' => $dataCollector,
         ];
     }
 
