@@ -123,5 +123,9 @@ final class CustomWebProfilerBundleExtension extends Extension
         if (!@file_exists($root.'/bitrix/admin/_profilier_clear.php')) {
             copy(__DIR__.'/../../Install/_profilier_clear.php', $root.'/bitrix/admin/_profilier_clear.php');
         }
+
+        if (!@file_exists($root.'/bitrix/images/symfony.png')) {
+            copy(__DIR__.'/../../Install/symfony.png', $root.'/bitrix/images/symfony.png');
+        }
     }
 }

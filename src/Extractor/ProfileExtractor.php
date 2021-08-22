@@ -102,4 +102,18 @@ class ProfileExtractor
 
         return $result;
     }
+
+    /**
+     * Свежайший токен.
+     *
+     * @return string|null
+     */
+    public function latestToken() : ?string
+    {
+        if ($latest = current($this->profiler->find(null, null, 1, null, null, null))) {
+            return $latest['token'];
+        }
+
+        return null;
+    }
 }

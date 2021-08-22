@@ -18,11 +18,17 @@ class BitrixAddButtonMenu
     private $profiler;
 
     /**
+     * @var string $baseUrl
+     */
+    private $baseUrl;
+
+    /**
      * @param Profiler $profiler Profiler.
      */
-    public function __construct(Profiler $profiler)
+    public function __construct(Profiler $profiler, string $baseUrl = '/_profiler/token/render/')
     {
         $this->profiler = $profiler;
+        $this->baseUrl = $baseUrl;
     }
 
     /**
@@ -42,19 +48,19 @@ class BitrixAddButtonMenu
 
         if ($latest = current($this->profiler->find(null, null, 1, null, null, null))) {
             $token = $latest['token'];
-            $headers->add('X-Debug-Token-Link', '/_profiler/token/render/?token=' . $token);
+            $headers->add('X-Debug-Token-Link', $this->baseUrl . '/?token=' . $token);
             $headers->set('X-Debug-Token', $token);
 
             $GLOBALS['APPLICATION']->AddPanelButton(
                 [
                     "ID" => "bitrix-profilier", //определяет уникальность кнопки
-                    "TEXT" => "Профайлер текущего запроса",
+                    "TEXT" => "Профайлер <br/> текущего запроса",
                     "TYPE" => "BIG", //BIG - большая кнопка, иначе маленькая
                     "MAIN_SORT" => 10000, //индекс сортировки для групп кнопок
                     "SORT" => 10, //сортировка внутри группы
-                    "HREF" => '/_profiler/token/render/?token=' . $token, //или javascript:MyJSFunction())
+                    "HREF" => $this->baseUrl .'/?token=' . $token, //или javascript:MyJSFunction())
                     "ICON" => "bitrix-profilier-icon", //название CSS-класса с иконкой кнопки
-                    "SRC" => "",
+                    "SRC" => "/bitrix/images/symfony.png",
                     "ALT" => "Профайлер", //старый вариант
                     "HINT" => [ //тултип кнопки
                         "TITLE" => "Профайлер",
@@ -66,7 +72,31 @@ class BitrixAddButtonMenu
                     ],
                     "MENU" => []
                 ],
-                false
+                true
+            );
+
+            $GLOBALS['APPLICATION']->AddPanelButton(
+                [
+                    "ID" => "bitrix-profilier-latest", //определяет уникальность кнопки
+                    "TEXT" => "Профайлер <br/> последнего запроса",
+                    "TYPE" => "BIG", //BIG - большая кнопка, иначе маленькая
+                    "MAIN_SORT" => 10000, //индекс сортировки для групп кнопок
+                    "SORT" => 10, //сортировка внутри группы
+                    "HREF" => $this->baseUrl .'/?token=latest',
+                    "ICON" => "bitrix-profilier-icon", //название CSS-класса с иконкой кнопки
+                    "SRC" => "/bitrix/images/symfony.png",
+                    "ALT" => "Профайлер последнего запроса", //старый вариант
+                    "HINT" => [ //тултип кнопки
+                        "TITLE" => "Профайлер последнего запроса",
+                        "TEXT" => "Профайлер последнего запроса" //HTML допускается
+                    ],
+                    "HINT_MENU" => [
+                        "TITLE" => "Профайлер последнего запроса",
+                        "TEXT" => "Профайлер последнего запроса" //HTML допускается
+                    ],
+                    "MENU" => []
+                ],
+                true
             );
         }
     }

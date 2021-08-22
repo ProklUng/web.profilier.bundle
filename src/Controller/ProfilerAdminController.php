@@ -82,6 +82,13 @@ class ProfilerAdminController extends AbstractController
             throw $this->createAccessDeniedException('Only with type of token allowed!');
         }
 
+        if ($token === 'latest') {
+            $token = $this->profileExtractor->latestToken();
+            if (!$token) {
+                throw new \RuntimeException('Cannot get latest token.');
+            }
+        }
+
         $data = $this->profileExtractor->extractByToken($token);
 
         $content = $this->processData($data);
