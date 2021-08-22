@@ -67,7 +67,7 @@ class BitrixAddButtonMenu
                     "MAIN_SORT" => 10000, //индекс сортировки для групп кнопок
                     "SORT" => 10, //сортировка внутри группы
                     "HREF" => $this->baseUrl .'?token=' . $token, //или javascript:MyJSFunction())
-                    "ICON" => "bitrix-profilier-icon", //название CSS-класса с иконкой кнопки
+                    "ICON" => "bx-panel-install-solution-icon", //название CSS-класса с иконкой кнопки
                     "SRC" => "/bitrix/images/symfony.png",
                     "ALT" => "Профайлер", //старый вариант
                     "HINT" => [ //тултип кнопки
@@ -91,7 +91,7 @@ class BitrixAddButtonMenu
                     "MAIN_SORT" => 10000,
                     "SORT" => 10,
                     "HREF" => $this->baseUrl .'?token=latest',
-                    "ICON" => "bitrix-profilier-icon",
+                    "ICON" => "bx-panel-install-solution-icon",
                     "SRC" => "/bitrix/images/symfony.png",
                     "ALT" => "Профайлер последнего запроса",
                     "HINT" => [
