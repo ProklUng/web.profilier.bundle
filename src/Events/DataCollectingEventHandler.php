@@ -95,9 +95,6 @@ class DataCollectingEventHandler
         $headers = $response->getHeaders()->toArray();
 
         if (!empty($headers['x-debug-token']['values'][0])) {
-            // Иначе глюки.
-            $this->rrmdir($_SERVER['DOCUMENT_ROOT'] . '/bitrix/cache/profiler');
-
             $symfonyResponse = new Response(
                 $isSymfonyRoute ? $sfResponse->getContent() : $response->getContent(),
                 $isSymfonyRoute ? $sfResponse->getStatusCode() : ($response->getStatus() ?? 200),
@@ -138,31 +135,6 @@ class DataCollectingEventHandler
 
             $result[$url] = $json;
             $this->dataFileHandler->write($result);
-        }
-    }
-
-    /**
-     * Рекурсивно удалить папку со всем файлами и папками.
-     *
-     * @param string $dir Директория.
-     *
-     * @return void
-     */
-    private function rrmdir(string $dir) : void
-    {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object !== '.' && $object !== '..') {
-                    if (filetype($dir. '/' .$object) === 'dir') {
-                        $this->rrmdir($dir . '/' . $object);
-                    } else {
-                        unlink($dir. '/' . $object);
-                    }
-                }
-            }
-            reset($objects);
-            rmdir($dir);
         }
     }
 }
