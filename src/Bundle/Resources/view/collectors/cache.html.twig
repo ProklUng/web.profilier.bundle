@@ -81,7 +81,7 @@
     <div class="sf-tabs">
         {% for name, calls in collector.calls %}
             <div class="tab {{ collector.calls|length == 0 ? 'disabled' }}">
-                <h3 class="tab-title">{{ name }} <span class="badge">{{ statistics[name].calls }}</span></h3>
+                <h3 class="tab-title">{{ name }} <span class="badge">{{ collector.statistics[name].calls }}</span></h3>
 
                 <div class="tab-content">
                     {% if collector.calls|length == 0 %}
@@ -121,7 +121,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for call in collector.calls %}
+                            {% for call in calls %}
                                 {{ profiler_dump(call) }}
                             {% endfor %}
                             </tbody>

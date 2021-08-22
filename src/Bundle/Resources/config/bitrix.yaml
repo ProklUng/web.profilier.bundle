@@ -23,6 +23,14 @@ services:
     tags:
       - { name: bitrix.events.init, module: main, event: OnBeforeProlog, method: handle, sort: 1 }
 
+  # Добавляет кнопку в панель Битрикса.
+  Prokl\WebProfilierBundle\Events\BitrixAddButtonMenu:
+    class: Prokl\WebProfilierBundle\Events\BitrixAddButtonMenu
+    arguments:
+      - '@profiler'
+    tags:
+      - { name: bitrix.events.init, module: main, event: OnBeforeProlog, method: handle, sort: 10 }
+
   # Кастомное событие, чтобы проставить заголовки
   Prokl\WebProfilierBundle\Events\BitrixAfterHandleRequestListener:
     class: Prokl\WebProfilierBundle\Events\BitrixAfterHandleRequestListener

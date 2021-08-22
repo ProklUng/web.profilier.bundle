@@ -120,7 +120,10 @@ class ProfilerAdminController extends AbstractController
         foreach ($data as $key => $url) {
             foreach ($url as $collectorName => $values) {
                 if ($values['template']) {
-                    $data[$key][$collectorName]['template'] = $this->twig->render($values['template'], $values);
+                    // ToDo Временный костыль против глюков с Твигом.
+                    if ($values['template'] !== '/collectors/twig.html.twig') {
+                        $data[$key][$collectorName]['template'] = $this->twig->render($values['template'], $values);
+                    }
                 }
             }
         }

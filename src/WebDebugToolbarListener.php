@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Class WebDebugToolbarListener
- * Проставляет заголовки X-Debug-Token симфоническим роутам.
+ * Проставляет заголовки X-Debug-Token-Link симфоническим роутам.
  */
 final class WebDebugToolbarListener implements EventSubscriberInterface
 {
@@ -41,10 +41,13 @@ final class WebDebugToolbarListener implements EventSubscriberInterface
         $response = $event->getResponse();
 
         if ($response->headers->has('X-Debug-Token')) {
+            $request = $event->getRequest();
+            $host = $request->getSchemeAndHttpHost();
+
             try {
                 $response->headers->set(
                     'X-Debug-Token-Link',
-                    '/bitrix/admin/_profilier/'
+                    $host . '/_profiler/token/render/?token=' . $response->headers->get('X-Debug-Token')
                 );
             } catch (\Exception $e) {
                 $response->headers->set(
