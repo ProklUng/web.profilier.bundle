@@ -121,17 +121,6 @@ class DataCollectingEventHandler
                 return;
             }
 
-            // Суть манипуляций: зацепить внешние дата-коллекторы, полученные через событие
-            // и пустить их в дело.
-            $externalCollectorsBag = new ExternalDataCollectorsBag();
-            $externalCollectors = $externalCollectorsBag->all();
-
-            foreach ($externalCollectors as $externalCollector) {
-                $profile->addCollector($externalCollector);
-            }
-
-            $this->profiler->saveProfile($profile);
-
             $json = $this->profileExtractor->extract($profile);
 
             $result[$url] = $json;

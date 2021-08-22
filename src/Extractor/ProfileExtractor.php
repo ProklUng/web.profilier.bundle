@@ -3,6 +3,7 @@
 namespace Prokl\WebProfilierBundle\Extractor;
 
 use Prokl\WebProfilierBundle\Contract\DataCollectorTransformerInterface;
+use Prokl\WebProfilierBundle\Utils\ExternalDataCollectorsBag;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
@@ -64,6 +65,16 @@ class ProfileExtractor
         $transformers = $this->transformers->all();
 
         $result = [];
+
+        // Суть манипуляций: зацепить внешние дата-коллекторы, полученные через событие
+        // и пустить их в дело.
+        $externalCollectorsBag = new ExternalDataCollectorsBag();
+        $externalCollectors = $externalCollectorsBag->all();
+
+        foreach ($externalCollectors as $externalCollector) {
+            $profile->addCollector($externalCollector);
+        }
+
         foreach ($profile->getCollectors() as $collector) {
             $name = $collector->getName();
             if (!$transformers->has($name)) {
