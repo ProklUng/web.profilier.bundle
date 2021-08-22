@@ -22,22 +22,37 @@ class ProfileListenerDecorator implements EventSubscriberInterface
     private $profileListener;
 
     /**
+     * @var array $excludedUrl Игнорируемые URL.
+     */
+    private $excludedUrl;
+
+    /**
      * @param ProfilerListener $profileListener
      */
-    public function __construct(ProfilerListener $profileListener)
-    {
+    public function __construct(
+        ProfilerListener $profileListener,
+        array $excludedUrl
+    ) {
         $this->profileListener = $profileListener;
+        $this->excludedUrl = $excludedUrl;
     }
 
     /**
      * Handles the onKernelResponse event.
+     *
+     * @param ResponseEvent $event
+     *
+     * @return void
      */
     public function onKernelResponse(ResponseEvent $event)
     {
         $request = $event->getRequest();
         $url = $request->getRequestUri();
-        if (stripos($url, 'public_session.php') !== false) {
-            return;
+
+        foreach ($this->excludedUrl as $item) {
+            if (stripos($url, $item) !== false) {
+                return;
+            }
         }
 
         return $this->profileListener->onKernelResponse($event);
@@ -48,12 +63,19 @@ class ProfileListenerDecorator implements EventSubscriberInterface
         return $this->profileListener->onKernelException($event);
     }
 
+    /**
+     * @param TerminateEvent $event
+     *
+     * @return void
+     */
     public function onKernelTerminate(TerminateEvent $event)
     {
         $request = $event->getRequest();
         $url = $request->getRequestUri();
-        if (stripos($url, 'public_session.php') !== false) {
-            return;
+        foreach ($this->excludedUrl as $item) {
+            if (stripos($url, $item) !== false) {
+                return;
+            }
         }
 
         return $this->profileListener->onKernelTerminate($event);

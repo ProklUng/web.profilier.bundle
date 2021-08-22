@@ -39,7 +39,7 @@ services:
 
   Prokl\WebProfilierBundle\Events\ProfileListenerDecorator:
     decorates: profiler_listener
-    arguments: ['@.inner']
+    arguments: ['@.inner', '%web_profilier.ignoring_url%']
     tags:
       - { name: kernel.event_subscriber }
 

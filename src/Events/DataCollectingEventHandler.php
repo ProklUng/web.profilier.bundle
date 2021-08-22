@@ -6,7 +6,6 @@ use Bitrix\Main\Application;
 use Exception;
 use Prokl\WebProfilierBundle\Contract\DataFileHandlerInterface;
 use Prokl\WebProfilierBundle\Contract\ProfilerGuardInterface;
-use Prokl\WebProfilierBundle\Extractor\DataCollectorTransformerBag;
 use Prokl\WebProfilierBundle\Extractor\ProfileExtractor;
 use Prokl\WebProfilierBundle\Utils\ExternalDataCollectorsBag;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -130,6 +129,8 @@ class DataCollectingEventHandler
             foreach ($externalCollectors as $externalCollector) {
                 $profile->addCollector($externalCollector);
             }
+
+            $this->profiler->saveProfile($profile);
 
             $json = $this->profileExtractor->extract($profile);
 
