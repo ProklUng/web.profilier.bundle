@@ -39,14 +39,19 @@ class DataCollectingEventHandler
      */
     private $profileExtractor;
 
+    /**
+     * @var array $ignoringUrls Игнорируемые URL.
+     */
     private $ignoringUrls;
 
     /**
      * DataCollectingEventHandler constructor.
      *
-     * @param Profiler                    $profiler                Profiler.
-     * @param ProfilerGuardInterface      $guard                   Guard.
-     * @param DataFileHandlerInterface    $dataFileHandler         Обработчик файлов профайлера.
+     * @param Profiler                    $profiler         Profiler.
+     * @param ProfilerGuardInterface      $guard            Guard.
+     * @param ProfileExtractor            $profileExtractor Обработчик профилей.
+     * @param DataFileHandlerInterface    $dataFileHandler  Обработчик файлов профайлера.
+     * @param array                       $ignoringUrls     Игнорируемые URL.
      */
     public function __construct(
         Profiler $profiler,

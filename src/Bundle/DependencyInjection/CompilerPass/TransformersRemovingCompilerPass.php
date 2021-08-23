@@ -18,7 +18,7 @@ class TransformersRemovingCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->getParameter('eb_profilier.enabled') || !$container->hasParameter('web_profilier.disabled_profilers')) {
+        if (!$container->getParameter('web_profilier.enabled') || !$container->hasParameter('web_profilier.disabled_profilers')) {
             return;
         }
 
