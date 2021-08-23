@@ -4,6 +4,7 @@ namespace Prokl\WebProfilierBundle\Events;
 
 use Bitrix\Main\Application;
 use Exception;
+use Prokl\WebProfilierBundle\Bitrix\ResponseFromBitrixMigrator;
 use Prokl\WebProfilierBundle\Contract\DataFileHandlerInterface;
 use Prokl\WebProfilierBundle\Contract\ProfilerGuardInterface;
 use Prokl\WebProfilierBundle\Extractor\ProfileExtractor;
@@ -91,13 +92,6 @@ class DataCollectingEventHandler
         $context = Application::getInstance()->getContext();
         $request = $context->getRequest();
 
-        $sfRequest = $sfRequest ?? Request::createFromGlobals();
-
-        $isSymfonyRoute = false;
-        if ($sfRequest->headers && $sfRequest->headers->has('X-Symfony-route')) {
-            $isSymfonyRoute = true;
-        }
-
         $url = $request->getRequestUri();
 
         // Игнорируемые.
@@ -105,18 +99,25 @@ class DataCollectingEventHandler
             return;
         }
 
+        $sfRequest = $sfRequest ?? Request::createFromGlobals();
+
+        $isSymfonyRoute = false;
+        if ($sfRequest->headers && $sfRequest->headers->has('X-Symfony-route')) {
+            $isSymfonyRoute = true;
+        }
+
         $response = $context->getResponse();
         $headers = $response->getHeaders()->toArray();
 
         if (!empty($headers['x-debug-token']['values'][0])) {
-            $symfonyResponse = new Response(
-                $isSymfonyRoute ? $sfResponse->getContent() : $response->getContent(),
-                $isSymfonyRoute ? $sfResponse->getStatusCode() : ($response->getStatus() ?? 200),
-                $isSymfonyRoute ? $sfResponse->headers->all() : $response->getHeaders()->toArray()
-            );
-
-            // Миграция кук из request в response
             if ($isSymfonyRoute) {
+                $symfonyResponse = new Response(
+                    $sfResponse->getContent(),
+                    $sfResponse->getStatusCode(),
+                    $sfResponse->headers->all()
+                );
+
+                // Миграция кук из Request в Response.
                 $responseCookies = [];
                 foreach ($sfRequest->cookies->all() as $cookie) {
                     $responseCookies[$cookie] = $cookie;
@@ -128,6 +129,9 @@ class DataCollectingEventHandler
                     }
                     $symfonyResponse->headers->setCookie(new Cookie($cookieName, $responseCookie));
                 }
+            } else {
+                $bitrixResponseMigrator = new ResponseFromBitrixMigrator();
+                $symfonyResponse = $bitrixResponseMigrator->convert();
             }
 
             $profile = $this->profiler->collect($sfRequest, $symfonyResponse);

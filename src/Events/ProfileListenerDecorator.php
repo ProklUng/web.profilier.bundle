@@ -55,6 +55,11 @@ class ProfileListenerDecorator implements EventSubscriberInterface
             }
         }
 
+        // Не симфонический роут. Такие обрабатываются позже.
+        if ($event->getResponse()->getStatusCode() === 404) {
+            return;
+        }
+
         return $this->profileListener->onKernelResponse($event);
     }
 
