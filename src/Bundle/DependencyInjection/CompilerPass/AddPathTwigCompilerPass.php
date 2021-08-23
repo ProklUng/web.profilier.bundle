@@ -18,6 +18,10 @@ class AddPathTwigCompilerPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container): void
     {
+        if (!$container->getParameter('web_profilier.enabled')) {
+            return;
+        }
+
         // Подмес путей к твиговским шаблонам бандла.
         $twigLoaderDef = $container->getDefinition('profilier.twig_loader');
         foreach ($container->getParameter('web_profilier.profiler_twig_templates_path') as $path) {

@@ -5,7 +5,7 @@ services:
     autoconfigure: true
     public: true
 
-  # Обработка данных в самом конце исполнения страницы
+  # Сердцевина бандла. Обработка данных в самом конце исполнения страницы.
   Prokl\WebProfilierBundle\Events\DataCollectingEventHandler:
     class: Prokl\WebProfilierBundle\Events\DataCollectingEventHandler
     arguments:
@@ -13,6 +13,7 @@ services:
       - '@Prokl\WebProfilierBundle\Utils\ProfilerGuard'
       - '@profile_extractor'
       - '@Prokl\WebProfilierBundle\Contract\DataFileHandlerInterface'
+      - '%web_profilier.ignoring_url%'
     tags:
       - { name: bitrix.events.init, module: main, event: OnAfterEpilog, method: handle, sort: 1 }
 

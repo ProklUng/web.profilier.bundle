@@ -39,6 +39,8 @@ class DataCollectingEventHandler
      */
     private $profileExtractor;
 
+    private $ignoringUrls;
+
     /**
      * DataCollectingEventHandler constructor.
      *
@@ -50,12 +52,14 @@ class DataCollectingEventHandler
         Profiler $profiler,
         ProfilerGuardInterface $guard,
         ProfileExtractor $profileExtractor,
-        DataFileHandlerInterface $dataFileHandler
+        DataFileHandlerInterface $dataFileHandler,
+        array $ignoringUrls = []
     ) {
         $this->profiler = $profiler;
         $this->guard = $guard;
         $this->dataFileHandler = $dataFileHandler;
         $this->profileExtractor = $profileExtractor;
+        $this->ignoringUrls = $ignoringUrls;
     }
 
     /**
@@ -90,6 +94,12 @@ class DataCollectingEventHandler
         }
 
         $url = $request->getRequestUri();
+
+        // Игнорируемые.
+        if (!$this->support($url)) {
+            return;
+        }
+
         $response = $context->getResponse();
         $headers = $response->getHeaders()->toArray();
 
@@ -126,5 +136,27 @@ class DataCollectingEventHandler
             $result[$url] = $json;
             $this->dataFileHandler->write($result);
         }
+    }
+
+    /**
+     * Не в списке ли игнорируемых.
+     *
+     * @param string|null $url URL.
+     *
+     * @return bool
+     */
+    private function support(?string $url) : bool
+    {
+        if (!$url) {
+            return false;
+        }
+
+        foreach ($this->ignoringUrls as $ignoringUrl) {
+            if (stripos($url, $ignoringUrl) !== false) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
