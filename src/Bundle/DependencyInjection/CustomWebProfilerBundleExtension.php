@@ -130,13 +130,5 @@ final class CustomWebProfilerBundleExtension extends Extension
         if (!@file_exists($root.'/bitrix/images/symfony.png')) {
             copy(__DIR__.'/../../Install/symfony.png', $root.'/bitrix/images/symfony.png');
         }
-
-        if (!@file_exists($root.'/bitrix/admin/bootstrap.bundle.min.js')) {
-            copy(__DIR__.'/../../Install/assets/bootstrap.bundle.min.js', $root.'/bitrix/admin/bootstrap.bundle.min.js');
-        }
-
-        if (!@file_exists($root.'/bitrix/admin/bootstrap.min.css')) {
-            copy(__DIR__.'/../../Install/assets/bootstrap.min.css', $root.'/bitrix/admin/bootstrap.min.css');
-        }
     }
 }
