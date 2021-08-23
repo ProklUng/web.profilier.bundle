@@ -99,7 +99,7 @@ class ProfileExtractor
             $template = $handler->getTemplate();
             $result[$name]['template'] = $template;
             $result[$name]['id'] = str_replace('.', '_', $name);
-            $result[$name]['date'] = date('Y-m-d H:i:s');
+            $result[$name]['date'] = date('Y-m-d H:i:s', $profile->getTime());
         }
 
         return $result;
