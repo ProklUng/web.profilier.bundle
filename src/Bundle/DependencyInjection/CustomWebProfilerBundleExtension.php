@@ -116,12 +116,12 @@ final class CustomWebProfilerBundleExtension extends Extension
     private function installFiles(string $root): void
     {
         // Без роутера.
-        if (!@file_exists($root.'/bitrix/admin/_profilier.php')) {
-            copy(__DIR__.'/../../Install/_profilier.php', $root.'/bitrix/admin/_profilier.php');
+        if (!@file_exists($root.'/bitrix/admin/_profiler.php')) {
+            copy(__DIR__.'/../../Install/_profiler.php', $root.'/bitrix/admin/_profiler.php');
         }
 
-        if (!@file_exists($root.'/bitrix/admin/_profilier_clear.php')) {
-            copy(__DIR__.'/../../Install/_profilier_clear.php', $root.'/bitrix/admin/_profilier_clear.php');
+        if (!@file_exists($root.'/bitrix/admin/_profiler_clear.php')) {
+            copy(__DIR__.'/../../Install/_profiler_clear.php', $root.'/bitrix/admin/_profiler_clear.php');
         }
 
         if (!@file_exists($root.'/bitrix/images/symfony.png')) {
