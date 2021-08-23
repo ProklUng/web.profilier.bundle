@@ -30,7 +30,7 @@ final class CustomWebProfilerBundleExtension extends Extension
         $config = $this->processConfiguration(new Configuration(), $configs);
         $container->setParameter('web_profilier.enabled', $config['enabled']);
 
-        if (!$config['enabled'] || !$_SERVER['REQUEST_URI']) {
+        if (!$config['enabled']) {
             $container->setParameter('web_profilier.enabled', false);
             return;
         }
