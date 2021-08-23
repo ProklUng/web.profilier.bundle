@@ -36,7 +36,8 @@
                                 aria-expanded="false"
                                 aria-controls="flush-collapse{{ countUrl }}{{ loop.index }}"
                         >
-                            {{ url }}
+                            <span class="btn btn-secondary rounded-0" style="font-size:.7rem">{{ meta[url].date }}</span>
+                            <span style="margin-left:1rem">{{ url }}</span>
                         </button>
                     </h2>
                     <div id="flush-collapse{{ countUrl }}{{ loop.index }}"

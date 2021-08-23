@@ -124,6 +124,7 @@ class ProfilerAdminController extends AbstractController
      */
     private function processData(array $data) : string
     {
+        $meta = [];
         foreach ($data as $key => $url) {
             foreach ($url as $collectorName => $values) {
                 if ($values['template']) {
@@ -132,9 +133,12 @@ class ProfilerAdminController extends AbstractController
                         $data[$key][$collectorName]['template'] = $this->twig->render($values['template'], $values);
                     }
                 }
+
+                $meta[$key]['date'] = $data[$key][$collectorName]['date'];
+                unset($data[$key]['date']);
             }
         }
 
-        return $this->twig->render($this->template, ['data' => $data, 'empty' => empty($data)]);
+        return $this->twig->render($this->template, ['meta' => $meta, 'data' => $data, 'empty' => empty($data)]);
     }
 }

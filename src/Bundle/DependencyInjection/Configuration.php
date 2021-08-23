@@ -34,7 +34,7 @@ final class Configuration implements ConfigurationInterface
                 ->useAttributeAsKey('name')
                 ->prototype('scalar')->end()
                 // @phpstan-ignore-next-line
-                ->defaultValue(['/bitrix/admin', 'spread.php',  'public_session.php', '/_profiler'])
+                ->defaultValue(['/bitrix/admin', 'spread.php',  'public_session.php', '/_profiler', '/_profilier'])
             ->end()
             ->arrayNode('profilers')
                 ->useAttributeAsKey('name')

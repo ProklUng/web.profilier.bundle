@@ -4,6 +4,7 @@ namespace Prokl\WebProfilierBundle\Extractor;
 
 use Prokl\WebProfilierBundle\Contract\DataCollectorTransformerInterface;
 use Prokl\WebProfilierBundle\Utils\ExternalDataCollectorsBag;
+use RuntimeException;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
@@ -47,7 +48,7 @@ class ProfileExtractor
     {
         $profile = $this->profiler->loadProfile($token);
         if (!$profile) {
-            throw new \RuntimeException('Profile by token ' . $token . ' not found.');
+            throw new RuntimeException('Profile by token ' . $token . ' not found.');
         }
 
         $data[$profile->getUrl()] = $this->extract($profile);
@@ -98,6 +99,7 @@ class ProfileExtractor
             $template = $handler->getTemplate();
             $result[$name]['template'] = $template;
             $result[$name]['id'] = str_replace('.', '_', $name);
+            $result[$name]['date'] = date('Y-m-d H:i:s');
         }
 
         return $result;
