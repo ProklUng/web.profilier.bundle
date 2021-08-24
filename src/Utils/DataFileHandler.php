@@ -52,7 +52,7 @@ class DataFileHandler implements DataFileHandlerInterface
             $final = unserialize($profilerData);
         }
 
-        $final = array_merge($data, $final);
+        $final = array_merge($final, $data);
 
         @unlink($profilerDataFile);
         $serialized = serialize($final);
