@@ -140,6 +140,10 @@ class DataCollectingEventHandler
                 return;
             }
 
+            if (!$isSymfonyRoute) {
+                $this->profiler->saveProfile($profile);
+            }
+
             $json = $this->profileExtractor->extract($profile);
 
             $result[$url] = $json;
