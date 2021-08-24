@@ -73,7 +73,12 @@ class ProfileExtractor
         $externalCollectors = $externalCollectorsBag->all();
 
         foreach ($externalCollectors as $externalCollector) {
-            $profile->addCollector($externalCollector);
+            $collectorForAdd = $externalCollector;
+            // Декоратор
+            if (method_exists($externalCollector, 'getDataCollector')) {
+                $collectorForAdd = $externalCollector->getDataCollector();
+            }
+            $profile->addCollector($collectorForAdd);
         }
 
         foreach ($profile->getCollectors() as $collector) {
