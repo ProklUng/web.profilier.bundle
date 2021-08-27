@@ -77,3 +77,16 @@ services:
     class: Prokl\WebProfilierBundle\Bitrix\BitrixUniqualizatorProfileData
 
   Prokl\WebProfilierBundle\Contract\UniqualizatorProfileDataInterface: '@data_file_storage_uniqualizator'
+
+  #########################
+  # Bitrix data collectors
+  #########################
+
+  Prokl\WebProfilierBundle\Bitrix\Metric\MetrixDataCollector:
+    class: Prokl\WebProfilierBundle\Bitrix\Metric\MetrixDataCollector
+    tags:
+      - { name: data_collector, id: metrics, template: '/collectors/json_response.html.twig', priority: 600 }
+
+  Prokl\WebProfilierBundle\Bitrix\Metric\MetricsDataCollectorTransformer:
+    tags:
+      - { name: web_profiler.transformer, key: 'metrics' }

@@ -1,0 +1,27 @@
+<h2>Метрики сайта</h2>
+
+<div class="sf-toolbar-info-group">
+    <h6 class="tab-title mt-3">Количество необработанных почтовых сообщений</h6>
+
+    <div class="sf-toolbar-info-piece">
+        <span class="sf-toolbar-status"> {{ collector.unsentmail }}</span>
+    </div>
+
+    <h6 class="tab-title mt-3">Количество авторизаций</h6>
+
+    <div class="sf-toolbar-info-piece">
+        <span class="sf-toolbar-status"> {{ collector.loginsusers }}</span>
+    </div>
+
+    <h6 class="tab-title mt-3">Проверки</h6>
+
+    {% for checker in collector.checkers %}
+        <div><strong>{{ checker.title }}<span style="padding-left: 1rem">{{ checker.result }}</span></strong></div>
+            {% for message in checker.messages %}
+                <div>
+                    {{ message }}
+                </div>
+            {% endfor %}
+    {% endfor %}
+
+</div>
